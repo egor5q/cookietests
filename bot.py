@@ -1788,14 +1788,14 @@ def goo(m):
 
 @bot.message_handler(commands=['begin'])
 def begin(m):
-  if m.chat.id==-229396706:
+  if m.chat.id==-1001208357368:#-229396706:
      if m.chat.id not in games:
         games.update(creategame(m.chat.id))
         kb=types.InlineKeyboardMarkup()
-        kb.add(types.InlineKeyboardButton(text='Присоединиться', url='telegram.me/cookietestsbot?start='+str(m.chat.id)))
+        kb.add(types.InlineKeyboardButton(text='Присоединиться', url='telegram.me/cookiewarsbot?start='+str(m.chat.id)))
         bot.send_message(m.chat.id, 'Игра началась! Список игроков:\n\n', reply_markup=kb)
   else:
-       bot.send_message(m.chat.id, 'На данный момент играть можно только в чате ***!')
+       bot.send_message(m.chat.id, 'На данный момент играть можно только в чате @cookiewarsru!')
         
         
 def medit(message_text,chat_id, message_id,reply_markup=None,parse_mode='Markdown'):
