@@ -664,7 +664,7 @@ def inline(call):
        else:
            bot.answer_callback_query(call.id, 'У вас уже есть это!')
             
-  elif call.data=='buypaukovod:
+  elif call.data=='buypaukovod':
        x=users.find_one({'id':call.from_user.id})
        if 'paukovod' not in x['bot']['bought']:
            if x['cookie']>=2500:
