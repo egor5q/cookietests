@@ -991,6 +991,7 @@ def results(id):
             if games[id]['bots'][ids]['die']!=1:
                 if games[id]['bots'][ids]['id']<0:
                   games[id]['bots'][ids]['id']-=(games[id]['bots'][ids]['id']*2)
+                  games[id]['bots'][ids]['name']=games[id]['bots'][ids]['id']['name']
                   print(games[id]['bots'][ids]['id'])
                 name=games[id]['bots'][ids]['name']
                 winner=games[id]['bots'][ids]
