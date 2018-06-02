@@ -1782,7 +1782,7 @@ def begin(m):
      if m.chat.id not in games:
         games.update(creategame(m.chat.id))
         kb=types.InlineKeyboardMarkup()
-        kb.add(types.InlineKeyboardButton(text='Присоединиться', url='telegram.me/cookiewarsbot?start='+str(m.chat.id)))
+        kb.add(types.InlineKeyboardButton(text='Присоединиться', url='telegram.me/cookietestsbot?start='+str(m.chat.id)))
         bot.send_message(m.chat.id, 'Игра началась! Список игроков:\n\n', reply_markup=kb)
   #else:
        #bot.send_message(m.chat.id, 'На данный момент играть можно только в чате @cookiewarsru.')
