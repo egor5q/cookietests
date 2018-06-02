@@ -96,7 +96,7 @@ def createboss(id):
 def createpauk(id):
     return{id-(id*2):{'name': 'Паук',
               'weapon':'bite',
-              'skills':[],
+              'skills':['cazn'],
               'team':None,
               'hp':2,
               'maxenergy':5,
@@ -1339,7 +1339,7 @@ def bitechance(energy, target, x, id, bot1):
   elif energy==4:
     chance=80
   elif energy==3:
-    chance=70
+    chance=75
   elif energy==2:
     chance=60
   elif energy==1:
@@ -1347,7 +1347,7 @@ def bitechance(energy, target, x, id, bot1):
   elif energy==0:
     chance=0
   if target['hp']==1 and 'cazn' in bot1['skills'] and target['zombie']<=0:
-      games[id]['res']+='💥Ассасин '+bot1['name']+' достаёт револьвер и добивает '+target['name']+' точным выстрелом в голову!\n'
+      games[id]['res']+='💀Голодный Паук доедает ослабевшего '+target['name']+'!\n'
       target['hp']-=1
       bot1['energy']=0
   else:
