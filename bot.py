@@ -1106,6 +1106,7 @@ def dmgs(id):
     for itemss in pauk:
        games[id]['bots'].update(createpauk(itemss))
        print('pauk')
+       print(games[id]['bots'])
     games[id]['secondres']='Эффекты:\n'+text
    
     
