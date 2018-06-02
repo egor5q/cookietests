@@ -94,7 +94,7 @@ def createboss(id):
 
 
 def createpauk(id):
-    return{-id:{'name': 'Паук',
+    return{id-(id*2):{'name': 'Паук',
               'weapon':'bite',
               'skills':[],
               'team':None,
@@ -1092,19 +1092,20 @@ def dmgs(id):
            if 'zombie' not in games[id]['bots'][mob]['skills']:
              if games[id]['bots'][mob]['die']!=1:
               text+='☠️'+games[id]['bots'][mob]['name']+' погибает.\n'
-              if 'paukovod' in games[id]['bots'][mob]['skills']:
-                  text+='🕷Паук бойца '+games[id]['bots'][mob]['name']+' в ярости! Он присоединяется к бою.\n'
-                  pauk.append(games[id]['bots'][mob]['id'])
            else:
               games[id]['bots'][mob]['zombie']=3
               games[id]['bots'][mob]['hp']=1
               text+='👹'+games[id]['bots'][mob]['name']+' теперь зомби!\n'
+           if 'paukovod' in games[id]['bots'][mob]['skills']:
+                  text+='🕷Паук бойца '+games[id]['bots'][mob]['name']+' в ярости! Он присоединяется к бою.\n'
+                  pauk.append(games[id]['bots'][mob]['id'])
      if games[id]['xod']%5==0:
        if games[id]['bots'][mob]['id']==87651712:
           if games[id]['bots'][mob]['die']!=1 and games[id]['bots'][mob]['hp']>0:
               text+=games[id]['bots'][mob]['name']+' сосёт!\n'
     for item in pauk:
        games[id]['bots'].update(createpauk(item))
+       print('pauk')
     games[id]['secondres']='Эффекты:\n'+text
    
     
