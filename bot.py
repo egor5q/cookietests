@@ -993,6 +993,7 @@ def results(id):
                   games[id]['bots'][ids]['id']-=games[id]['bots'][ids]['id']-games[id]['bots'][ids]['id']
                 name=games[id]['bots'][ids]['name']
                 winner=games[id]['bots'][ids]
+                print(winner['id'])
       if name!=None:
         points=6
         for ids in games[id]['bots']:
