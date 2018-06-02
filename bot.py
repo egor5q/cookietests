@@ -113,7 +113,7 @@ def createpauk(id):
               'takendmg':0,
               'die':0,
               'yvorotkd':0,
-              'id':id,
+              'id':-id,
               'blood':0,
               'bought':[],
               'accuracy':0,
