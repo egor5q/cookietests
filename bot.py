@@ -990,6 +990,8 @@ def results(id):
       for ids in games[id]['bots']:
             if games[id]['bots'][ids]['die']!=1:
                 name=games[id]['bots'][ids]['name']
+                if games[id]['bots'][ids]['id']<0:
+                  games[id]['bots'][ids]['id']-=games[id]['bots'][ids]['id']-games[id]['bots'][ids]['id']
                 winner=games[id]['bots'][ids]
       if name!=None:
         points=6
@@ -1348,7 +1350,7 @@ def bitechance(energy, target, x, id, bot1):
       bot1['energy']=0
   else:
     if (x+target['miss']-bot1['accuracy'])<=chance:
-          damage=1
+          damage=3
           if 'berserk' in bot1['skills'] and bot1['hp']<=1:
               damage+=2
           x=random.randint(1,100)
@@ -1357,7 +1359,7 @@ def bitechance(energy, target, x, id, bot1):
                 stun=1
           games[id]['res']+='🕷'+bot1['name']+' кусает '+target['name']+'! Нанесено '+str(damage)+' Урона.\n'
           if stun==1:
-                text+='🤢Цель поражена ядом! Энергия снижена на 3.'
+                games[id]['res']+='🤢Цель поражена ядом! Её энергия снижена на 3.'
                 target['energy']-=3
           target['takendmg']+=damage
           bot1['energy']-=2
