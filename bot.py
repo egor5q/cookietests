@@ -204,6 +204,7 @@ def invent(m):
     zombie='☑️'
     gipnoz='☑️'
     cube='☑️'
+    paukovod='☑️'
     if 'shieldgen' in x['bot']['skills']:
         shield='✅'
     if 'medic' in x['bot']['skills']:
@@ -222,6 +223,8 @@ def invent(m):
         zombie='✅'
     if 'gipnoz' in x['bot']['skills']:
         gipnoz='✅'
+    if 'paukovod' in x['bot']['skills']:
+        paukovod='✅'
     if 'cube' in x['bot']['skills']:
         cube='✅'
     
@@ -244,6 +247,8 @@ def invent(m):
             kb.add(types.InlineKeyboardButton(text=zombie+'👹Зомби', callback_data='equipzombie'))
         elif item=='gipnoz':
             kb.add(types.InlineKeyboardButton(text=gipnoz+'👁Гипноз', callback_data='equipgipnoz'))
+        elif item=='paukovod':
+            kb.add(types.InlineKeyboardButton(text=paukovod+'🕷Пауковод', callback_data='equippaukovod'))
         elif item=='cube':
             kb.add(types.InlineKeyboardButton(text=cube+'🎲Куб рандома', callback_data='equipcube'))
     kb.add(types.InlineKeyboardButton(text='Закрыть меню', callback_data='close'))
@@ -373,6 +378,7 @@ def inline(call):
   zombie='☑️'
   gipnoz='☑️'
   cube='☑️'
+  paukovod='☑️'
   x=users.find_one({'id':call.from_user.id})
   if call.data=='hp':
         if 'shieldgen' in x['bot']['bought']:
@@ -410,9 +416,12 @@ def inline(call):
             gipnoz='✅'
         if 'cube' in x['bot']['bought']:
             cube='✅'
+        if 'paukovod' in x['bot']['bought']:
+            paukovod='✅'
         kb=types.InlineKeyboardMarkup()
         kb.add(types.InlineKeyboardButton(text=zombie+'👹Зомби', callback_data='zombie'))
         kb.add(types.InlineKeyboardButton(text=gipnoz+'👁Гипноз', callback_data='gipnoz'))
+        kb.add(types.InlineKeyboardButton(text=paukovod+'🕷Пауковод', callback_data='paukovod'))
         kb.add(types.InlineKeyboardButton(text=cube+'🎲Куб рандома', callback_data='cube'))
         medit('Ветка: разное', call.message.chat.id, call.message.message_id, reply_markup=kb)
        
@@ -470,6 +479,12 @@ def inline(call):
        kb.add(types.InlineKeyboardButton(text='2000⚛️', callback_data='buygipnoz'))
        kb.add(types.InlineKeyboardButton(text='Назад', callback_data='back'))
        medit('Если применить на атакующего врага, он атакует сам себя. Хотите приобрести?',call.message.chat.id, call.message.message_id, reply_markup=kb)
+    
+  elif call.data=='paukovod':
+       kb=types.InlineKeyboardMarkup()
+       kb.add(types.InlineKeyboardButton(text='2500⚛️', callback_data='buypaukovod'))
+       kb.add(types.InlineKeyboardButton(text='Назад', callback_data='back'))
+       medit('Хп бойца снижено на 2. После смерти боец призывает разьяренного паука, у которого 2 хп. Хотите приобрести?',call.message.chat.id, call.message.message_id, reply_markup=kb)
        
   elif call.data=='berserk':
        kb=types.InlineKeyboardMarkup()
@@ -648,6 +663,22 @@ def inline(call):
                bot.answer_callback_query(call.id, 'Недостаточно поинтов!')
        else:
            bot.answer_callback_query(call.id, 'У вас уже есть это!')
+            
+  elif call.data=='buypaukovod:
+       x=users.find_one({'id':call.from_user.id})
+       if 'paukovod' not in x['bot']['bought']:
+           if x['cookie']>=2500:
+             if 'gipnoz' in x['bot']['bought']:
+                users.update_one({'id':call.from_user.id}, {'$push':{'bot.bought':'paukovod'}})
+                users.update_one({'id':call.from_user.id}, {'$inc':{'cookie':-2500}})
+                medit('Вы успешно приобрели скилл "Пауковод"!',call.message.chat.id,call.message.message_id)
+             else:
+                bot.answer_callback_query(call.id, 'Сначала приобретите предыдущее улучшение!')
+           else:
+               bot.answer_callback_query(call.id, 'Недостаточно поинтов!')
+       else:
+           bot.answer_callback_query(call.id, 'У вас уже есть это!')
+            
        
   elif call.data=='buyberserk':
        x=users.find_one({'id':call.from_user.id})
@@ -786,6 +817,18 @@ def inline(call):
     else:
         users.update_one({'id':call.from_user.id}, {'$pull':{'bot.skills':'gipnoz'}})
         bot.answer_callback_query(call.id, 'Вы успешно сняли скилл "Гипноз"!')
+        
+  elif call.data=='equippaukovod':
+    x=users.find_one({'id':call.from_user.id})
+    if 'paukovod' not in x['bot']['skills']:
+      if len(x['bot']['skills'])<=1:
+        users.update_one({'id':call.from_user.id}, {'$push':{'bot.skills':'paukovod'}})
+        bot.answer_callback_query(call.id, 'Вы успешно экипировали скилл "Пауковод"!')
+      else:
+          bot.answer_callback_query(call.id, 'У вас уже экипировано максимум скиллов(2). Чтобы снять скилл, нажмите на его название.')
+    else:
+        users.update_one({'id':call.from_user.id}, {'$pull':{'bot.skills':'paukovod'}})
+        bot.answer_callback_query(call.id, 'Вы успешно сняли скилл "Пауковод"!')
        
   elif call.data=='equiprock':
     x=userstrug.find_one({'id':call.from_user.id})
