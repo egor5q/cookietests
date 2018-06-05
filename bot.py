@@ -36,6 +36,11 @@ def timee(m):
    x=time.ctime()
    x=x.split(" ")
    print(x)
+   x=x[4]
+   print(x)
+   x=x.split(":")
+   x=x[0]
+   print(x)
    bot.send_message(m.chat.id, str(time.ctime()))
 
 @bot.message_handler(commands=['dropname'])
