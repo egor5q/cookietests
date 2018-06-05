@@ -33,7 +33,7 @@ userstrug=db2.users
 
 @bot.message_handler(commands=['time'])
 def timee(m):
-   bot.send_message(m.chat.id, str(time.ctime().hours))
+   bot.send_message(m.chat.id, str(time.ctime()))
 
 @bot.message_handler(commands=['dropname'])
 def dropname(m):
