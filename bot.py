@@ -2317,6 +2317,10 @@ def start(m):
           if y['bot']['name']!=None:
            if games[int(x[1])]['started']==0:
             games[int(x[1])]['bots'].update(createbott(m.from_user.id, y['bot']))
+            try:
+               games[int(x[1])]['allbots'].update(createbott(m.from_user.id, y['bot']))
+            except:
+               pass
             users.update_one({'id':m.from_user.id}, {'$set':{'name':m.from_user.first_name}})
             bot.send_message(m.chat.id, 'Вы присоединились! Игра начнётся в чате, когда кто-нибудь нажмёт /go.')
             bot.send_message(int(x[1]), m.from_user.first_name+' (боец '+y['bot']['name']+') присоединился!')
@@ -2634,6 +2638,7 @@ def createdung(id):
         'chatid':id,
         'ids':[],
         'bots':{},
+        'allbots':{},
         'captain':None,
         'enemies':{},
         'results':'',
@@ -2702,7 +2707,7 @@ def begindung(id):
     giveitems(games[id])
     games[id]['started2']=1
     captain(id)
-    #battledung(id)
+    battledung(id)
  else:
    pass
  
@@ -2713,7 +2718,7 @@ def captain(id):
       x.append(games[id]['bots'][ids]['id'])
    z=random.choice(x)
    games[id]['captain']=z
-   bot.send_message(id, games[id]['bots'][z]['name'])
+   bot.send_message(id, games[id]['bots'][z]['name']+' - ваш капитан, который будет выбирать награду для всей команды за каждого побежденного монстра.')
    
    
    
@@ -2727,6 +2732,151 @@ def goodung(m):
         else:
             bot.send_message(m.chat.id, 'Недостаточно игроков!')
    
+   
+   
+def battledung(id):  
+  for bots in games[id]['allbots']:
+   if games[id]['allbots'][bots]['die']!=1:
+    if games[id]['allbots'][bots]['stun']<=0:
+     games[id]['allbots'][bots][act(bots, id)]=1
+  results(id)
+
+def resultsdung(id):           
+  for bots in games[id]['allbots']:
+     if games[id]['allbots'][bots]['yvorot']==1:
+        yvorot(games[id]['allbots'][bots], id)
+        
+  for bots in games[id]['allbots']:
+     if games[id]['allbots'][bots]['skill']==1:
+        skill(games[id]['allbots'][bots], id)   
+              
+  for bots in games[id]['allbots']:
+      if games[id]['allbots'][bots]['item']==1:
+          item(games[id]['allbots'][bots], id) 
+              
+  for bots in games[id]['allbots']:
+     if games[id]['allbots'][bots]['reload']==1:
+        reload(games[id]['allbots'][bots], id)          
+              
+  for bots in games[id]['allbots']:
+      if games[id]['allbots'][bots]['attack']==1:
+        attack(games[id]['allbots'][bots],id)
+                     
+  for ids in games[id]['allbots']:
+    if games[id]['allbots'][ids]['shield']>=1:
+        games[id]['allbots'][ids]['takendmg']=0
+  dmgs(id)
+  z=0
+  bot.send_message(id, 'Результаты хода '+str(games[id]['xod'])+':\n'+games[id]['res']+'\n\n')
+  bot.send_message(id, games[id]['secondres'])
+  die=0    
+  games[id]['xod']+=1
+  for mobs in games[id]['allbots']:
+    if games[id]['allbots'][mobs]['hp']>games[id]['allbots'][mobs]['maxhp']:
+        games[id]['allbots'][mobs]['hp']=games[id]['allbots'][mobs]['maxhp']
+    games[id]['allbots'][mobs]['attack']=0
+    games[id]['allbots'][mobs]['yvorot']=0 
+    games[id]['allbots'][mobs]['reload']=0 
+    games[id]['allbots'][mobs]['item']=0
+    games[id]['allbots'][mobs]['miss']=0
+    if 'nindza' in games[id]['allbots'][mobs]['skills']:
+      games[id]['allbots'][mobs]['miss']=20
+    games[id]['allbots'][mobs]['skill']=0
+    games[id]['allbots'][mobs]['shield']=0
+    games[id]['allbots'][mobs]['takendmg']=0
+    games[id]['allbots'][mobs]['yvorotkd']-=1
+    games[id]['allbots'][mobs]['shield']-=1
+    games[id]['allbots'][mobs]['shieldgen']-=1
+    games[id]['allbots'][mobs]['target']=None
+    games[id]['allbots'][mobs]['gipnoz']-=1
+    games[id]['allbots'][mobs]['mainskill']=[]
+    games[id]['allbots'][mobs]['mainitem']=[]
+    if games[id]['allbots'][mobs]['heal']!=0:
+        games[id]['allbots'][mobs]['heal']-=1
+    if games[id]['allbots'][mobs]['die']!=1:
+     if games[id]['allbots'][mobs]['hp']<1:
+      games[id]['allbots'][mobs]['die']=1
+  for ids in games[id]['allbots']:
+      if games[id]['allbots'][ids]['die']==1:
+            die+=1
+  if 0 not in games[id]['allbots']:
+   if die+1>=len(games[id]['allbots']):
+      z=1
+      name=None
+      for ids in games[id]['allbots']:
+            if games[id]['allbots'][ids]['die']!=1:
+                if games[id]['allbots'][ids]['id']<0:
+                  games[id]['allbots'][ids]['id']-=(games[id]['allbots'][ids]['id']*2)
+                  games[id]['allbots'][ids]['name']=games[id]['allbots'][ids]['name']
+                  print(games[id]['allbots'][ids]['id'])
+                name=games[id]['allbots'][ids]['name']
+                winner=games[id]['allbots'][ids]
+                print(winner['id'])
+      if name!=None:
+        points=6
+        for ids in games[id]['bots']:
+            points+=4
+        for ids in games[id]['bots']:
+            for itemss in games[id]['bots'][ids]['skills']:
+              if games[id]['bots'][ids]['id']!=winner['id']:
+               if itemss!='cube' and itemss!='active':
+                points+=2
+        for ids in games[id]['bots']:
+            for itemss in games[id]['bots'][ids]['skin']:
+              if games[id]['bots'][ids]['id']!=winner['id']:
+                points+=2
+        if winner['id']!=0:
+            prize1=150
+            prize2=200
+            prize3=300
+            prize4=450
+            prize5=600
+            prize6=800
+            prize7=10000
+            winner2=users.find_one({'id':winner['id']})
+            y=userstrug.find_one({'id':winner['id']})
+            if id==-1001208357368:
+             x=users.find({})
+             try:
+              cookie=round(points*winner2['cookiecoef'], 0)
+              cookie=int(cookie)
+              bot.send_message(id, '🏆'+name+' победил! Он получает '+str(points)+'❇️ опыта, а '+winner2['name']+' - '+str(points)+'⚛️ поинтов и '+str(cookie)+'🍪 куки;\nВсе участники игры получают 2⚛️ поинта и 2❇️ опыта!')
+              userstrug.update_one({'id':winner['id']}, {'$inc':{'cookies':cookie}})
+             except:
+              
+                bot.send_message(id, '🏆'+name+' победил! Он получает '+str(points)+'❇️ опыта, а '+winner2['name']+' - '+str(points)+'⚛️ поинтов! Куки получить не удалось - для этого надо зарегистрироваться в @TrugRuBot!')
+             users.update_one({'id':winner['id']}, {'$inc':{'cookie':points}})
+             users.update_one({'id':winner['id']}, {'$inc':{'bot.exp':points}})
+             for ids in games[id]['bots']:
+               users.update_one({'id':games[id]['bots'][ids]['id']}, {'$inc':{'bot.exp':2}})
+               users.update_one({'id':games[id]['bots'][ids]['id']}, {'$inc':{'cookie':2}})
+               user=users.find_one({'id':games[id]['bots'][ids]['id']})
+               i=games[id]['bots'][ids]['exp']
+
+            else:
+                  bot.send_message(id, '🏆'+name+' победил! Но награду за победу можно получить только в официальном чате - @cookiewarsru!')
+        else:
+            bot.send_message(id, '🏆'+name+' победил!')
+      else:
+        bot.send_message(id, 'Все проиграли!')
+      for ids in games[id]['bots']:
+       try:
+         users.update_one({'id':games[id]['bots'][ids]['id']}, {'$inc':{'games':1}})
+       except:
+         pass
+  else:
+       if games[id]['bots'][0]['hp']<=0:
+           bot.send_message(id, '🏆Босс побеждён!')
+           z=1
+       
+  games[id]['results']=''
+  games[id]['res']=''
+  games[id]['secondres']=''
+  if z==0:
+    t=threading.Timer(12.0, battle, args=[id])
+    t.start()
+  else:
+    del games[id]
    
    
    
