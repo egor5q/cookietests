@@ -2634,6 +2634,7 @@ def createdung(id):
         'chatid':id,
         'ids':[],
         'bots':{},
+        'captain':None,
         'enemies':{},
         'results':'',
         'secondres':'',
@@ -2648,6 +2649,80 @@ def createdung(id):
    
    
    
+def begindung(id):
+ if games[id]['started2']!=1:
+    spisok=['kinzhal','rock', 'hand', 'ak', 'saw']
+    for ids in games[id]['bots']:
+        if games[id]['bots'][ids]['weapon']==None:
+            games[id]['bots'][ids]['weapon']='hand'
+        active=['shieldgen', 'medic', 'gipnoz']
+        yes=0
+        for i in active:
+            if i in games[id]['bots'][ids]['skills']:
+                yes=1  
+        if yes==1:
+              games[id]['bots'][ids]['skills'].append('active')
+            
+        if 'liveful' in games[id]['bots'][ids]['skills']:
+            games[id]['bots'][ids]['hp']+=2
+            games[id]['bots'][ids]['accuracy']-=15
+        if 'dvuzhil' in games[id]['bots'][ids]['skills']:
+            games[id]['bots'][ids]['hp']+=0
+            games[id]['bots'][ids]['damagelimit']+=3
+        if 'medic' in games[id]['bots'][ids]['skills']:
+            games[id]['bots'][ids]['heal']=9
+        if 'pricel' in games[id]['bots'][ids]['skills']:
+            games[id]['bots'][ids]['accuracy']+=15
+        if 'paukovod' in games[id]['bots'][ids]['skills']:
+            games[id]['bots'][ids]['hp']-=2
+        if 'nindza' in games[id]['bots'][ids]['skills']:
+            games[id]['bots'][ids]['miss']+=20
+        games[id]['bots'][ids]['maxhp']=games[id]['bots'][ids]['hp']
+        if 'robot' in games[id]['bots'][ids]['skin']:
+            games[id]['bots'][ids]['maxenergy']+=1
+    text=''
+    
+    for ids in games[id]['bots']: 
+        randomm=0
+        text+=games[id]['bots'][ids]['name']+':\n'
+        for skill in games[id]['bots'][ids]['skills']:
+          if randomm==0:
+            bots=games[id]['bots'][ids]
+            if skill!='cube' and skill!='active':
+                text+=skilltoname(skill)+'\n'
+            else:
+                if skill!='active':
+                    randomm=bots['skills'][len(bots['skills'])-1]
+                    text+=skilltoname(skill)+'('+skilltoname(bots['skills'][len(bots['skills'])-1])+')\n'
+          else:
+              if skill!=randomm and skill!='active':
+                    text+=skilltoname(skill)+'\n'
+        text+='\n'
+    bot.send_message(id, 'Экипированные скиллы:\n\n'+text)
+    giveitems(games[id])
+    games[id]['started2']=1
+    captain(id)
+    #battledung(id)
+ else:
+   pass
+ 
+   
+def captain(id):
+   x=random.choice(games[id]['bots'])
+   games[id]['captain']=x['id']
+   bot.send_message(id, x['name'])
+   
+   
+   
+@bot.message_handler(commands=['dungstart'])
+def goodung(m):
+    if m.chat.id in games:
+        if len(games[m.chat.id]['bots'])>=1:
+         if games[m.chat.id]['started']==0:
+           begindung(m.chat.id)
+           games[m.chat.id]['started']=1
+        else:
+            bot.send_message(m.chat.id, 'Недостаточно игроков!')
    
    
    
