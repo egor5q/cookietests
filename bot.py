@@ -2710,7 +2710,7 @@ def begindung(id):
 def captain(id):
    x=[]
    for ids in games[id]:
-      x.append(games[id][ids]['id'])
+      x.append(games[id]['bots'][ids]['id'])
    z=random.choice(x)
    games[id]['captain']=z
    bot.send_message(id, games[id][z]['name'])
