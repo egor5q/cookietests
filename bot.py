@@ -2617,7 +2617,7 @@ def boxreload(m):
    
 @bot.message_handler(commands=['dungeon'])
 def beginDung(m):
-  if m.chat.id==-1001208357368:#-229396706:
+  #if m.chat.id==-1001208357368:#-229396706:
      if m.chat.id not in games:
         games.update(createdung(m.chat.id))
         kb=types.InlineKeyboardMarkup()
