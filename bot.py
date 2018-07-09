@@ -2621,7 +2621,7 @@ def beginDung(m):
      if m.chat.id not in games:
         games.update(createdung(m.chat.id))
         kb=types.InlineKeyboardMarkup()
-        kb.add(types.InlineKeyboardButton(text='Присоединиться', url='telegram.me/cookiewarsbot?start='+str(m.chat.id)))
+        kb.add(types.InlineKeyboardButton(text='Присоединиться', url='telegram.me/cookietestsbot?start='+str(m.chat.id)))
         bot.send_message(m.chat.id, 'Собираем бойцов для похода в подземелье!\n\n', reply_markup=kb)
 
    
