@@ -2390,24 +2390,7 @@ def begin(m):
                
         if m.chat.id!=-1001208357368:
          bot.send_message(441399484, 'Где-то началась игра!')
- 
-      
-   
-@bot.message_handler(commands=['tournier'])
-def begin(m):
-  if m.chat.id==-1001208357368:#-229396706:
-     if m.chat.id not in games:
-        games.update(creategame(m.chat.id))
-        kb=types.InlineKeyboardMarkup()
-        kb.add(types.InlineKeyboardButton(text='Присоединиться', url='telegram.me/cookiewarsbot?start='+str(m.chat.id)))
-        
-        bot.send_message(m.chat.id, 'Начинается турнир!\n\n', reply_markup=kb)
-        x=users.find({})
-        
-
-   
-  else:
-   bot.send_message(m.chat.id, 'Турнир можно играть только в официальном чате!')
+             
    
    
 def medit(message_text,chat_id, message_id,reply_markup=None,parse_mode='Markdown'):
@@ -2548,9 +2531,11 @@ def creategame(id):
         'started':0,
         'xod':1,
         'started2':0,
+        'dung':0
         
              }
            }
+   
             
 def createbot(id):
   return {'name': None,
@@ -2620,6 +2605,55 @@ def boxreload(m):
     users.update_many({}, {'$set':{'dailybox':1}})   
     bot.send_message(m.chat.id, 'Дейлибоксы обновлены!')
 
+   
+   
+   
+   
+   
+###########################DUNGEON HERE####################################!!!!!!!!!!!!!!!#####################################
+   
+   
+   
+   
+@bot.message_handler(commands=['dungeon'])
+def beginDung(m):
+  if m.chat.id==-1001208357368:#-229396706:
+     if m.chat.id not in games:
+        games.update(createdung(m.chat.id))
+        kb=types.InlineKeyboardMarkup()
+        kb.add(types.InlineKeyboardButton(text='Присоединиться', url='telegram.me/cookiewarsbot?start='+str(m.chat.id)))
+        bot.send_message(m.chat.id, 'Собираем бойцов для похода в подземелье!\n\n', reply_markup=kb)
+
+   
+   
+   
+   
+   
+def createdung(id):
+    return {id:{
+        'chatid':id,
+        'ids':[],
+        'bots':{},
+        'enemies':{},
+        'results':'',
+        'secondres':'',
+        'res':'',
+        'started':0,
+        'xod':1,
+        'started2':0,
+        'dung':1
+        
+             }
+           }
+   
+   
+   
+   
+   
+   
+   
+#########################END OF DUNGEON##########################!!!!!!!!!!!!!!!!!!!#####################################
+   
 if True:
    dailybox()
 
