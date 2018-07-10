@@ -286,10 +286,7 @@ def itemselect():
     return x
     
 
-            
-        
-    
-              
+                    
   
       
 
@@ -791,13 +788,13 @@ def bitechance(energy, target, x, id, bot1):
         bot1['energy']-=5
          
          
-def drakozavrikchance(energy, target, x, id, bot1):
+def firebreathechance(energy, target, x, id, bot1):
   if energy>=5:
     chance=85
   elif energy==4:
     chance=65
   elif energy==3:
-    chance=35
+    chance=50
   elif energy==2:
     chance=20
   elif energy==1:
@@ -805,28 +802,28 @@ def drakozavrikchance(energy, target, x, id, bot1):
   elif energy==0:
     chance=1
   if target['hp']==1 and 'cazn' in bot1['skills'] and target['zombie']<=0:
-      games[id]['res']+='💀Голодный Паук доедает ослабевшего '+target['name']+'!\n'
+      games[id]['res']+='💀Голодный '+bot1['name']+' доедает ослабевшего '+target['name']+'!\n'
       target['hp']-=1
       bot1['energy']=0
   else:
     if (x+target['miss']-bot1['accuracy'])<=chance:
-          damage=5
+          damage=2
           if 'berserk' in bot1['skills'] and bot1['hp']<=1:
               damage+=2
           x=random.randint(1,100)
           stun=0
-          if x<=50:
+          if x<=30:
                 stun=1
-          games[id]['res']+='🕷'+bot1['name']+'Опаляет огнём '+target['name']+'! Нанесено '+str(damage)+' Урона.\n'
+          games[id]['res']+='🔥'+bot1['name']+'Опаляет огнём '+target['name']+'! Нанесено '+str(damage)+' Урона.\n'
           if stun==1:
-                games[id]['res']+='Цель горит!'
+                pass#games[id]['res']+='Цель горит!'
           target['takendmg']+=damage
           bot1['energy']-=2
         
     else:
         games[id]['res']+='💨'+bot1['name']+' промахнулся по '+target['name']+'!\n'
         bot1['target']=None
-        bot1['energy']-=5
+        bot1['energy']-=2
               
 
 
@@ -880,6 +877,9 @@ def attack(bot, id):
    
   elif bot['weapon']=='bite':
     bitechance(bot['energy'], target, x, id, bot)
+   
+  elif bot['weapon']=='firebreathe':
+    firebreathechance(bot['energy'], target, x, id, bot)
                                      
 
 def yvorot(bot, id):
@@ -1307,7 +1307,7 @@ def createmonsters(id, name):
 def createdrakozavrik(code, name):
    return {code:{'name': name,
               'code':code,
-              'weapon':'hand',
+              'weapon':'firebreathe',
               'skills':[],
               'team':None,
               'hp':2,
