@@ -2239,6 +2239,7 @@ def createmonsters(id, name):
          name2='Дракозаврик '+str(i)
          print(code)
          games[id]['bots'].update(createdrakozavrik(code, name2))
+         games[id]['enemies']+=1
          i+=1
          
 def createdrakozavrik(code, name):
