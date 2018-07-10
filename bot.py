@@ -789,7 +789,44 @@ def bitechance(energy, target, x, id, bot1):
         games[id]['res']+='💨'+bot1['name']+' промахнулся по '+target['name']+'!\n'
         bot1['target']=None
         bot1['energy']-=5
-    
+         
+         
+def drakozavrikchance(energy, target, x, id, bot1):
+  if energy>=5:
+    chance=85
+  elif energy==4:
+    chance=65
+  elif energy==3:
+    chance=35
+  elif energy==2:
+    chance=20
+  elif energy==1:
+    chance=15
+  elif energy==0:
+    chance=1
+  if target['hp']==1 and 'cazn' in bot1['skills'] and target['zombie']<=0:
+      games[id]['res']+='💀Голодный Паук доедает ослабевшего '+target['name']+'!\n'
+      target['hp']-=1
+      bot1['energy']=0
+  else:
+    if (x+target['miss']-bot1['accuracy'])<=chance:
+          damage=5
+          if 'berserk' in bot1['skills'] and bot1['hp']<=1:
+              damage+=2
+          x=random.randint(1,100)
+          stun=0
+          if x<=50:
+                stun=1
+          games[id]['res']+='🕷'+bot1['name']+'Опаляет огнём '+target['name']+'! Нанесено '+str(damage)+' Урона.\n'
+          if stun==1:
+                games[id]['res']+='Цель горит!'
+          target['takendmg']+=damage
+          bot1['energy']-=2
+        
+    else:
+        games[id]['res']+='💨'+bot1['name']+' промахнулся по '+target['name']+'!\n'
+        bot1['target']=None
+        bot1['energy']-=5
               
 
 
