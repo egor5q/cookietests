@@ -1789,7 +1789,10 @@ def attack(bot, id):
     while a[x-1]['die']==1 and dd<100:
        x=random.randint(1,len(a))
        dd+=1
-    target=games[id]['bots'][a[x-1]['id']]
+    if a[x-1]['id']!=0:
+      target=games[id]['bots'][a[x-1]['id']]
+    else:
+      target=games[id]['bots'][a[x-1]['code']]
     if bot['target']!=None:
         target=bot['target']
     bot['target']=target
@@ -2206,7 +2209,7 @@ def createmonsters(id, name):
    i=1
    if name=='drakozavrik':
       z=[]
-      while i<3:
+      while i<4:
          x=random.randint(1,10000)
          while x in z:
             x=random.randint(1,10000)
@@ -2240,6 +2243,7 @@ def createmonsters(id, name):
          
 def createdrakozavrik(code, name):
    return {code:{'name': name,
+              'code':code,
               'weapon':'hand',
               'skills':[],
               'team':None,
