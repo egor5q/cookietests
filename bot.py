@@ -814,7 +814,7 @@ def firebreathechance(energy, target, x, id, bot1):
           stun=0
           if x<=30:
                 stun=1
-          games[id]['res']+='🔥'+bot1['name']+'Опаляет огнём '+target['name']+'! Нанесено '+str(damage)+' Урона.\n'
+          games[id]['res']+='🔥'+bot1['name']+' опаляет огнём '+target['name']+'! Нанесено '+str(damage)+' Урона.\n'
           if stun==1:
                 pass#games[id]['res']+='Цель горит!'
           target['takendmg']+=damage
