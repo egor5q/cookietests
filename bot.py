@@ -1341,169 +1341,21 @@ def results(id):
     if games[id]['bots'][mobs]['die']!=1:
      if games[id]['bots'][mobs]['hp']<1:
       games[id]['bots'][mobs]['die']=1
+  diedungs=0
+  dieplayers=0
   for ids in games[id]['bots']:
-      if games[id]['bots'][ids]['die']==1:
-            die+=1
-  if 0 not in games[id]['bots']:
-   if die+1>=len(games[id]['bots']):
+      if games[id]['bots'][ids]['id']==0 and games[id]['bots'][ids]['die']==1:
+            diedungs+=1
+  for ids in games[id]['bots']:
+      if games[id]['bots'][ids]['id']!=0 and games[id]['bots'][ids]['die']==1:
+            dieplayers+=1
+  if diedungs==games[id]['enemies']:
+      bot.send_message(id, 'Подземелье пройдено!')
       z=1
-      name=None
-      for ids in games[id]['bots']:
-            if games[id]['bots'][ids]['die']!=1:
-                if games[id]['bots'][ids]['id']<0:
-                  games[id]['bots'][ids]['id']-=(games[id]['bots'][ids]['id']*2)
-                  games[id]['bots'][ids]['name']=games[id]['bots'][ids]['name']
-                  print(games[id]['bots'][ids]['id'])
-                name=games[id]['bots'][ids]['name']
-                winner=games[id]['bots'][ids]
-                print(winner['id'])
-      if name!=None:
-        points=6
-        for ids in games[id]['bots']:
-            points+=4
-        for ids in games[id]['bots']:
-            for itemss in games[id]['bots'][ids]['skills']:
-              if games[id]['bots'][ids]['id']!=winner['id']:
-               if itemss!='cube' and itemss!='active':
-                points+=2
-        for ids in games[id]['bots']:
-            for itemss in games[id]['bots'][ids]['skin']:
-              if games[id]['bots'][ids]['id']!=winner['id']:
-                points+=2
-        if winner['id']!=0:
-            prize1=150
-            prize2=200
-            prize3=300
-            prize4=450
-            prize5=600
-            prize6=800
-            prize7=10000
-            winner2=users.find_one({'id':winner['id']})
-            y=userstrug.find_one({'id':winner['id']})
-            if id==-1001208357368:
-             x=users.find({})
-             try:
-              cookie=round(points*winner2['cookiecoef'], 0)
-              cookie=int(cookie)
-              bot.send_message(id, '🏆'+name+' победил! Он получает '+str(points)+'❇️ опыта, а '+winner2['name']+' - '+str(points)+'⚛️ поинтов и '+str(cookie)+'🍪 куки;\nВсе участники игры получают 2⚛️ поинта и 2❇️ опыта!')
-              userstrug.update_one({'id':winner['id']}, {'$inc':{'cookies':cookie}})
-             except:
-              
-                bot.send_message(id, '🏆'+name+' победил! Он получает '+str(points)+'❇️ опыта, а '+winner2['name']+' - '+str(points)+'⚛️ поинтов! Куки получить не удалось - для этого надо зарегистрироваться в @TrugRuBot!')
-             users.update_one({'id':winner['id']}, {'$inc':{'cookie':points}})
-             users.update_one({'id':winner['id']}, {'$inc':{'bot.exp':points}})
-             for ids in games[id]['bots']:
-               users.update_one({'id':games[id]['bots'][ids]['id']}, {'$inc':{'bot.exp':2}})
-               users.update_one({'id':games[id]['bots'][ids]['id']}, {'$inc':{'cookie':2}})
-               user=users.find_one({'id':games[id]['bots'][ids]['id']})
-               i=games[id]['bots'][ids]['exp']
-               if i>100 and user['prize1']==0:
-                  if user['inviter']!=None:
-                     users.update_one({'id':user['inviter']}, {'$inc':{'cookie':int(prize1/2)}})
-                     try:
-                        bot.send_message(user['inviter'], 'Ваш приглашённый игрок '+user['name']+' получил ранг "Эсквайр"! Вы получаете '+str(int(prize1/2))+'⚛️.')
-                     except:
-                        pass
-                  try:
-                     bot.send_message(user['id'], 'Вы получили ранг "Эсквайр"! Награда: '+str(prize1)+'⚛️')
-                  except:
-                     pass
-                  users.update_one({'id':user['id']}, {'$set':{'prize1':1}})
-                  users.update_one({'id':user['id']}, {'$inc':{'cookie':prize1}})
-               if i>500 and user['prize2']==0:
-                  if user['inviter']!=None:
-                     users.update_one({'id':user['inviter']}, {'$inc':{'cookie':int(prize2/2)}})
-                     try:
-                        bot.send_message(user['inviter'], 'Ваш приглашённый игрок '+user['name']+' получил ранг "Солдат"! Вы получаете '+str(int(prize2/2))+'⚛️.')
-                     except:
-                        pass
-                  try:
-                     bot.send_message(user['id'], 'Вы получили ранг "Солдат"! Награда: '+str(prize2)+'⚛️')
-                  except:
-                     pass
-                  users.update_one({'id':user['id']}, {'$set':{'prize2':1}})
-                  users.update_one({'id':user['id']}, {'$inc':{'cookie':prize2}})
-               if i>800 and user['prize3']==0:
-                  if user['inviter']!=None:
-                     users.update_one({'id':user['inviter']}, {'$inc':{'cookie':int(prize3/2)}})
-                     try:
-                        bot.send_message(user['inviter'], 'Ваш приглашённый игрок '+user['name']+' получил ранг "Опытный боец"! Вы получаете '+str(int(prize3/2))+'⚛️.')
-                     except:
-                        pass
-                  try:
-                     bot.send_message(user['id'], 'Вы получили ранг "Опытный боец"! Награда: '+str(prize3)+'⚛️')
-                  except:
-                     pass
-                  users.update_one({'id':user['id']}, {'$set':{'prize3':1}})
-                  users.update_one({'id':user['id']}, {'$inc':{'cookie':prize3}})
-               if i>2000 and user['prize4']==0:
-                  if user['inviter']!=None:
-                     users.update_one({'id':user['inviter']}, {'$inc':{'cookie':int(prize4/2)}})
-                     try:
-                        bot.send_message(user['inviter'], 'Ваш приглашённый игрок '+user['name']+' получил ранг "Подполковник"! Вы получаете '+str(int(prize4/2))+'⚛️.')
-                     except:
-                        pass
-                  try:
-                     bot.send_message(user['id'], 'Вы получили ранг "Подполковник"! Награда: '+str(prize4)+'⚛️')
-                  except:
-                     pass
-                  users.update_one({'id':user['id']}, {'$set':{'prize4':1}})
-                  users.update_one({'id':user['id']}, {'$inc':{'cookie':prize4}})
-               if i>3500 and user['prize5']==0:
-                  if user['inviter']!=None:
-                     users.update_one({'id':user['inviter']}, {'$inc':{'cookie':int(prize5/2)}})
-                     try:
-                        bot.send_message(user['inviter'], 'Ваш приглашённый игрок '+user['name']+' получил ранг "Генерал"! Вы получаете '+str(int(prize5/2))+'⚛️.')
-                     except:
-                        pass
-                  try:
-                     bot.send_message(user['id'], 'Вы получили ранг "Генерал"! Награда: '+str(prize5)+'⚛️')
-                  except:
-                     pass
-                  users.update_one({'id':user['id']}, {'$set':{'prize5':1}})
-                  users.update_one({'id':user['id']}, {'$inc':{'cookie':prize5}})
-               if i>7000 and user['prize6']==0:
-                  if user['inviter']!=None:
-                     users.update_one({'id':user['inviter']}, {'$inc':{'cookie':int(prize6/2)}})
-                     try:
-                        bot.send_message(user['inviter'], 'Ваш приглашённый игрок '+user['name']+' получил ранг "Повелитель"! Вы получаете '+str(int(prize6/2))+'⚛️.')
-                     except:
-                        pass
-                  try:
-                     bot.send_message(user['id'], 'Вы получили ранг "Повелитель"! Награда: '+str(prize6)+'⚛️')
-                  except:
-                     pass
-                  users.update_one({'id':user['id']}, {'$set':{'prize6':1}})
-                  users.update_one({'id':user['id']}, {'$inc':{'cookie':prize6}})
-               if i>50000 and user['prize7']==0:
-                  if user['inviter']!=None:
-                     users.update_one({'id':user['inviter']}, {'$inc':{'cookie':int(prize7/2)}})
-                     try:
-                        bot.send_message(user['inviter'], 'Ваш приглашённый игрок '+user['name']+' получил ранг "Бог"! Вы получаете '+str(int(prize7/2))+'⚛️.')
-                     except:
-                        pass
-                  try:
-                     bot.send_message(user['id'], 'Вы получили ранг "Бог"! Награда: '+str(prize7)+'⚛️')
-                  except:
-                        pass
-                  users.update_one({'id':user['id']}, {'$set':{'prize7':1}})
-                  users.update_one({'id':user['id']}, {'$inc':{'cookie':prize7}})
-            else:
-                  bot.send_message(id, '🏆'+name+' победил! Но награду за победу можно получить только в официальном чате - @cookiewarsru!')
-        else:
-            bot.send_message(id, '🏆'+name+' победил!')
-      else:
-        bot.send_message(id, 'Все проиграли!')
-      for ids in games[id]['bots']:
-       try:
-         users.update_one({'id':games[id]['bots'][ids]['id']}, {'$inc':{'games':1}})
-       except:
-         pass
-  else:
-       if games[id]['bots'][0]['hp']<=0:
-           bot.send_message(id, '🏆Босс побеждён!')
-           z=1
-       
+  elif dieplayers==games[id]['players']:
+      bot.send_message(id, 'Бойцы проиграли!')
+      z=1
+  
   games[id]['results']=''
   games[id]['res']=''
   games[id]['secondres']=''
@@ -1924,9 +1776,14 @@ def bitechance(energy, target, x, id, bot1):
 def attack(bot, id):
   a=[]
   if 0 not in games[id]['bots']:
-    for bots in games[id]['bots']:
-        if games[id]['bots'][bots]['id']!=bot['id'] and games[id]['bots'][bots]['id']!=-bot['id']:
+    if bot['id']!=0:
+      for bots in games[id]['bots']:
+        if games[id]['bots'][bots]['id']==0:
             a.append(games[id]['bots'][bots])
+    else:
+         for bots in games[id]['bots']:
+            if games[id]['bots'][bots]['id']!=0:
+               a.append(games[id]['bots'][bots])
     x=random.randint(1,len(a))
     dd=0
     while a[x-1]['die']==1 and dd<100:
@@ -1937,23 +1794,7 @@ def attack(bot, id):
         target=bot['target']
     bot['target']=target
     x=random.randint(1,100)
-  else:
-    for bots in games[id]['bots']:
-      if games[id]['bots'][bots]['id']==0 and games[id]['bots'][bots]['id']!=bot['id']:
-        if games[id]['bots'][bots]['id']!=bot['id']:
-            a.append(games[id]['bots'][bots])
-        x=random.randint(1,len(a))
-        dd=0
-        while a[x-1]['die']==1 and dd<100:
-            dd+=1
-            x=random.randint(1,len(a))
-        target=games[id]['bots'][a[x-1]['id']]
-        if bot['target']!=None:
-            target=bot['target'] 
-        target=games[id]['bots'][0]
-        x=random.randint(1,100)
-      else:
-        target=games[id]['bots'][0]
+  
   x=random.randint(1,100)
 
   if bot['weapon']=='rock':
@@ -1999,9 +1840,14 @@ def skill(bot,id):
   skills=[]
   a=[]
   if 0 not in games[id]['bots']:
-      for bots in games[id]['bots']:
-        if games[id]['bots'][bots]['id']!=bot['id'] and games[id]['bots'][bots]['id']!=-bot['id']:
-            a.append(games[id]['bots'][bots])
+      if bot['id']!=0:
+         for bots in games[id]['bots']:
+            if games[id]['bots'][bots]['id']==0:
+               a.append(games[id]['bots'][bots])
+      else:
+         for bots in games[id]['bots']:
+            if games[id]['bots'][bots]['id']!=0:
+               a.append(games[id]['bots'][bots])
       x=random.randint(1,len(a))
       if bot['mainskill']==[]:
         while a[x-1]['die']==1:
@@ -2068,8 +1914,13 @@ def skill(bot,id):
 def item(bot, id):
   if 0 not in games[id]['bots']:
     a=[]
-    for bots in games[id]['bots']:
-        if games[id]['bots'][bots]['id']!=bot['id'] and games[id]['bots'][bots]['id']!=-bot['id'] and games[id]['bots'][bots]['die']!=1:
+    if bot['id']!=0:
+      for bots in games[id]['bots']:
+        if games[id]['bots'][bots]['id']==0 and games[id]['bots'][bots]['die']!=1:
+            a.append(games[id]['bots'][bots])
+    else:
+      for bots in games[id]['bots']:
+        if games[id]['bots'][bots]['id']!=0 and games[id]['bots'][bots]['die']!=1:
             a.append(games[id]['bots'][bots])
     x=random.randint(1,len(a))
     if bot['mainitem']==[]:
@@ -2180,12 +2031,14 @@ def actnumber(bot, id):
   x=random.randint(1,100)  
   low=0
   enemy=[]
-  for mob in games[id]['bots']:
-       if 0 not in games[id]['bots'] or games[id]['bots'][mob]['id']==0:
-              if games[id]['bots'][mob]['id']!=npc['id']:
+  if npc['id']!=0:
+      for mob in games[id]['bots']:
+              if games[id]['bots'][mob]['id']==0:
                      enemy.append(games[id]['bots'][mob])
-       else:
-              enemy.append(games[id]['bots'][0])
+  else:
+     for mob in games[id]['bots']:
+              if games[id]['bots'][mob]['id']!=0:
+                     enemy.append(games[id]['bots'][mob])
   for mob in enemy:
    if mob['energy']<=2 or mob['stun']>0 or mob['die']==1:
     low+=1
@@ -2317,10 +2170,7 @@ def start(m):
           if y['bot']['name']!=None:
            if games[int(x[1])]['started']==0:
             games[int(x[1])]['bots'].update(createbott(m.from_user.id, y['bot']))
-            try:
-               games[int(x[1])]['allbots'].update(createbott(m.from_user.id, y['bot']))
-            except:
-               pass
+            games[int(x[1])]['players']+=1
             users.update_one({'id':m.from_user.id}, {'$set':{'name':m.from_user.first_name}})
             bot.send_message(m.chat.id, 'Вы присоединились! Игра начнётся в чате, когда кто-нибудь нажмёт /go.')
             bot.send_message(int(x[1]), m.from_user.first_name+' (боец '+y['bot']['name']+') присоединился!')
@@ -2331,7 +2181,7 @@ def start(m):
         pass
   if users.find_one({'id':m.from_user.id})==None:
         try:
-            bot.send_message(m.from_user.id, 'Здраствуйте, вы попали в игру "CookieWars"! Вам был выдан начальный персонаж - селянин. В будущем вы можете улучшить его за куки! Подробнее об игре можно узнать с помощью команды /help.')
+            bot.send_message(m.from_user.id, 'Здраствуйте, вы попали в игру "CookieWars"! Вам был выдан начальный персонаж. В будущем вы можете улучшить его за куки! Подробнее об игре можно узнать с помощью команды /help.')
             users.insert_one(createuser(m.from_user.id, m.from_user.username, m.from_user.first_name))
         except:
             bot.send_message(m.chat.id, 'Напишите боту в личку!')
@@ -2352,11 +2202,93 @@ def start(m):
              pass
     
   
+def createmonsters(id, name):
+   i=1
+   if name=='drakozavrik':
+      z=[]
+      while i<3:
+         x=random.randint(1,10000)
+         while x in z:
+            x=random.randint(1,10000)
+         word=str(x)
+         code=''
+         for ids in word:
+            if ids=='0':
+               code+='a'
+            if ids=='1':
+               code+='b'
+            if ids=='2':
+               code+='c'
+            if ids=='3':
+               code+='d'
+            if ids=='4':
+               code+='e'
+            if ids=='5':
+               code+='f'
+            if ids=='6':
+               code+='g'
+            if ids=='7':
+               code+='h'
+            if ids=='8':
+               code+='i'
+            if ids=='9':
+               code+='g'
+         name2='Дракозаврик '+str(i)
+         print(code)
+         games[id]['bots'].update(createdrakozavrik(code, name2))
+         i+=1
+         
+def createdrakozavrik(code, name):
+   return {code:{'name': name,
+              'weapon':'hand',
+              'skills':[],
+              'team':None,
+              'hp':2,
+              'maxhp':0,
+              'maxenergy':5,
+              'energy':5,
+              'items':[],           
+              'attack':0,
+              'yvorot':0,
+              'reload':0,
+              'skill':0,
+              'item':0,
+              'miss':0,
+              'shield':0,
+              'stun':0,
+              'takendmg':0,
+              'die':0,
+              'yvorotkd':0,
+              'id':0,
+              'blood':0,
+              'bought':[],
+              'accuracy':0,
+              'damagelimit':3,
+              'zombie':0,
+              'heal':0,
+              'shieldgen':0,
+              'skin':[],
+              'oracle':1,
+              'target':None,
+              'exp':0,
+              'rank':0,
+              'mainskill':[],
+              'mainitem':[],
+              'weapons':['hand'],
+              'gipnoz':0
+}}
+                                  
+                                  
+                                  
+
 @bot.message_handler(commands=['go'])
 def goo(m):
     if m.chat.id in games:
-        if len(games[m.chat.id]['bots'])>=2:
+        if len(games[m.chat.id]['bots'])>=1:
          if games[m.chat.id]['started']==0:
+           monsters=['drakozavrik']
+           x=random.choice(monsters)
+           createmonsters(m.chat.id, x)
            begingame(m.chat.id)
            games[m.chat.id]['started']=1
         else:
@@ -2535,7 +2467,9 @@ def creategame(id):
         'started':0,
         'xod':1,
         'started2':0,
-        'dung':0
+        'dung':0,
+        'enemies':0,
+        'players':0
         
              }
            }
