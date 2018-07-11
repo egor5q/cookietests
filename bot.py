@@ -370,7 +370,7 @@ def results(id):
       if games[id]['bots'][ids]['id']!=0 and games[id]['bots'][ids]['die']==1:
             dieplayers+=1
   if diedungs==games[id]['enemies']:
-      bot.send_message(id, 'Подземелье пройдено! Теперь командир должен выбрать бонус для отряда.')
+      bot.send_message(id, 'Подземелье пройдено!')
       bonus=1
   elif dieplayers==games[id]['players']:
       bot.send_message(id, 'Бойцы проиграли!')
