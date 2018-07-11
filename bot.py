@@ -1388,7 +1388,11 @@ def createdrakozavrik(code, name):
                                   
 @bot.callback_query_handler(func=lambda call:True)
 def inline(call):
-   if call.message.chat.id in games:
+   i=0
+   for ids in games:
+      if call.message.chat.id==games[ids]['chatid']:
+         i=1
+   if i==1:
     print('1')
     if call.from_user.id==games[call.message.chat.id]['leader']:
      print('2')
