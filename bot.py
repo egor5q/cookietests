@@ -1519,7 +1519,8 @@ def begingame(id):
     text=''
     
     for ids in games[id]['bots']: 
-        randomm=0
+       randomm=0
+       if games[id]['bots'][ids]['die']!=1:
         text+=games[id]['bots'][ids]['name']+':\n'
         for skill in games[id]['bots'][ids]['skills']:
           if randomm==0:
