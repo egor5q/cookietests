@@ -331,6 +331,7 @@ def results(id):
         games[id]['bots'][ids]['takendmg']=0
   dmgs(id)
   z=0
+  bonus=0
   bot.send_message(id, 'Результаты хода '+str(games[id]['xod'])+':\n'+games[id]['res']+'\n\n')
   bot.send_message(id, games[id]['secondres'])
   die=0    
@@ -369,8 +370,8 @@ def results(id):
       if games[id]['bots'][ids]['id']!=0 and games[id]['bots'][ids]['die']==1:
             dieplayers+=1
   if diedungs==games[id]['enemies']:
-      bot.send_message(id, 'Подземелье пройдено!')
-      z=1
+      bot.send_message(id, 'Подземелье пройдено! Теперь командир должен выбрать бонус для отряда.')
+      bonus=1
   elif dieplayers==games[id]['players']:
       bot.send_message(id, 'Бойцы проиграли!')
       z=1
@@ -378,12 +379,43 @@ def results(id):
   games[id]['results']=''
   games[id]['res']=''
   games[id]['secondres']=''
-  if z==0:
+  if z==0 and bonus==0:
     t=threading.Timer(12.0, battle, args=[id])
     t.start()
-  else:
+  elif z==1 and bonus==0:
     del games[id]
-                   
+      
+  elif bonus==1:
+    prizechoice(id)
+    
+   
+def prizechoice(id):
+   prizes=['hp', 'miss', 'antifire']
+   choicen=[]
+   i=0
+   while i<3:
+      x=random.choice(prizes)
+      while x in choicen:
+         x=random.choice(prizes)
+      choicen.append(x)
+      i+=1
+   kb=types.InlineKeyboardMarkup()
+   for ids in choicen:
+      kb.add(types.InlineKeyboardButton(text=prizetoname(ids), callback_data=ids))
+   bot.send_message(id, 'Командир должен выбрать приз для команды:', reply_markup=kb)
+   
+   
+def prizetoname(name):
+   x='У приза нет названия, обратитесь к разработчику'
+   if name=='hp':
+      x='+1 ХП случайному бойцу'
+   if name=='miss':
+      x='+10% уклонения случайному бойцу'
+   if name=='antifire':
+      x='Сопротивление горению случайному бойцу'
+   return x
+   
+   
 def dmgs(id):
     c=0
     for ids in games[id]['bots']:
