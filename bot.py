@@ -375,6 +375,7 @@ def results(id):
          if games[id]['bots'][ids]['id']!=0:
             games[id]['bots'][ids]['hp']=games[id]['bots'][ids]['maxhp']
             games[id]['bots'][ids]['die']=0
+            games[id]['bots'][ids]['zombie']=0
             games[id]['bots'][ids]['energy']=games[id]['bots'][ids]['maxenergy']
       games[id]['started']=0
       games[id]['started2']=0
@@ -1311,7 +1312,11 @@ def createmonsters(id, name):
    i=1
    if name=='drakozavrik':
       z=[]
-      number=len(games[id]['bots'])*2
+      n=0
+      for ids in games[id]['bots']:
+         if games[id]['bots']['die']!=1:
+            n+=1
+      number=n*2
       while i<2+number:
          x=random.randint(1,10000)
          while x in z:
