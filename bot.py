@@ -371,6 +371,13 @@ def results(id):
             dieplayers+=1
   if diedungs==games[id]['enemies']:
       bot.send_message(id, 'Подземелье пройдено!')
+      for ids in games[id]['bots']:
+         if games[id]['bots'][ids]['id']!=0:
+            games[id]['bots'][ids]['hp']=games[id]['bots'][ids]['maxhp']
+            games[id]['bots'][ids]['die']=0
+            games[id]['bots'][ids]['energy']=games[id]['bots'][ids]['maxenergy']
+      games[id]['started']=0
+      games[id]['started2']=0
       bonus=1
   elif dieplayers==games[id]['players']:
       bot.send_message(id, 'Бойцы проиграли!')
@@ -1378,13 +1385,36 @@ def createdrakozavrik(code, name):
 }}
                                   
                                   
-                                  
+@bot.callback_query_handler(func=lambda call:True)
+def inline(call):
+   if call.chat.id in games:
+    if games[call.chat.id]['prizechoice']==1:
+      games[call.chat.id]['prizechoice']=0
+      prize=[]
+      if call.data=='hp':
+         for ids in games[call.chat.id]['bots']:
+            if games[call.chat.id]['bots'][ids]['id']!=0:
+               prize.append(games[call.chat.id]['bots'][ids]['id'])
+         prize=random.choice(prize)
+         games[call.chat.id]['bots'][prize]['maxhp']+=1
+         games[call.chat.id]['bots'][prize]['hp']+=1
+         medit('Выбрана награда: +1 хп. Максимальное хп бойца '+games[call.chat.id]['bots'][prize]['name']+' увеличено на 1!',call.chat.id,call.message.message_id)
+         begingame(call.chat.id)
+               
+   
+   
 
 @bot.message_handler(commands=['go'])
 def goo(m):
     if m.chat.id in games:
         if len(games[m.chat.id]['bots'])>=1:
          if games[m.chat.id]['started']==0:
+           players=[]
+           for ids in games[m.chat.id]['bots']:
+               players.append(games[m.chat.id]['bots'][ids]['id'])
+           leader=random.choice(players)
+           games[m.chat.id]['leader']=leader
+           bot.send_message(m.chat.id, 'Лидер группы: '+games[m.chat.id]['bots'][leader]['name'])
            monsters=['drakozavrik']
            x=random.choice(monsters)
            createmonsters(m.chat.id, x)
@@ -1435,6 +1465,7 @@ def medit(message_text,chat_id, message_id,reply_markup=None,parse_mode='Markdow
 
 def begingame(id):
  if games[id]['started2']!=1:
+    games[id]['started2']=1
     spisok=['kinzhal','rock', 'hand', 'ak', 'saw']
     for ids in games[id]['bots']:
         if games[id]['bots'][ids]['weapon']==None:
@@ -1558,6 +1589,7 @@ def createuser(id, username, name):
 def creategame(id):
     return {id:{
         'chatid':id,
+        'leader':None,
         'ids':[],
         'bots':{},
         'results':'',
@@ -1568,7 +1600,8 @@ def creategame(id):
         'started2':0,
         'dung':0,
         'enemies':0,
-        'players':0
+        'players':0,
+        'prizechoice':0
         
              }
            }
