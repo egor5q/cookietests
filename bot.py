@@ -1408,18 +1408,14 @@ def inline(call):
          games[call.message.chat.id]['bots'][prize]['maxhp']+=1
          games[call.message.chat.id]['bots'][prize]['hp']+=1
          medit('Выбрана награда: +1 хп. Максимальное хп бойца '+games[call.message.chat.id]['bots'][prize]['name']+' увеличено на 1!',call.message.chat.id,call.message.message_id)
-         if games[m.chat.id]['started']==0:
-           players=[]
-           for ids in games[m.chat.id]['bots']:
-               players.append(games[m.chat.id]['bots'][ids]['id'])
-           leader=random.choice(players)
-           games[m.chat.id]['leader']=leader
-           bot.send_message(m.chat.id, 'Лидер группы: '+games[m.chat.id]['bots'][leader]['name'])
+         if games[call.message.chat.id]['started']==0:
+
            monsters=['drakozavrik']
            x=random.choice(monsters)
-           createmonsters(m.chat.id, x)
-           begingame(m.chat.id)
-           games[m.chat.id]['started']=1
+           createmonsters(call.message.chat.id, x)
+           begingame(call.message.chat.id)
+           games[call.message.chat.id]['started']=1
+           games[call.message.chat.id]['started']=1
                
    
    
