@@ -378,6 +378,7 @@ def results(id):
             games[id]['bots'][ids]['energy']=games[id]['bots'][ids]['maxenergy']
       games[id]['started']=0
       games[id]['started2']=0
+      games[id]['prizechoice']=1
       bonus=1
   elif dieplayers==games[id]['players']:
       bot.send_message(id, 'Бойцы проиграли!')
@@ -1388,7 +1389,8 @@ def createdrakozavrik(code, name):
 @bot.callback_query_handler(func=lambda call:True)
 def inline(call):
    if call.message.chat.id in games:
-    if games[call.message.chat.id]['prizechoice']==1:
+    if call.from_user.id==games[call.message.chat.id]['leader']:
+     if games[call.message.chat.id]['prizechoice']==1:
       games[call.message.chat.id]['prizechoice']=0
       prize=[]
       if call.data=='hp':
