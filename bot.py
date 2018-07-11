@@ -1317,7 +1317,7 @@ def createmonsters(id, name):
          if games[id]['bots']['die']!=1:
             n+=1
       number=n*2
-      while i<2+number:
+      while i<2+games[id]['players']*2:
          x=random.randint(1,10000)
          while x in z:
             x=random.randint(1,10000)
