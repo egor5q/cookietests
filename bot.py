@@ -1387,19 +1387,19 @@ def createdrakozavrik(code, name):
                                   
 @bot.callback_query_handler(func=lambda call:True)
 def inline(call):
-   if call.chat.id in games:
-    if games[call.chat.id]['prizechoice']==1:
-      games[call.chat.id]['prizechoice']=0
+   if call.message.chat.id in games:
+    if games[call.message.chat.id]['prizechoice']==1:
+      games[call.message.chat.id]['prizechoice']=0
       prize=[]
       if call.data=='hp':
-         for ids in games[call.chat.id]['bots']:
-            if games[call.chat.id]['bots'][ids]['id']!=0:
-               prize.append(games[call.chat.id]['bots'][ids]['id'])
+         for ids in games[call.message.chat.id]['bots']:
+            if games[call.message.chat.id]['bots'][ids]['id']!=0:
+               prize.append(games[call.message.chat.id]['bots'][ids]['id'])
          prize=random.choice(prize)
-         games[call.chat.id]['bots'][prize]['maxhp']+=1
-         games[call.chat.id]['bots'][prize]['hp']+=1
-         medit('Выбрана награда: +1 хп. Максимальное хп бойца '+games[call.chat.id]['bots'][prize]['name']+' увеличено на 1!',call.chat.id,call.message.message_id)
-         begingame(call.chat.id)
+         games[call.message.chat.id]['bots'][prize]['maxhp']+=1
+         games[call.message.chat.id]['bots'][prize]['hp']+=1
+         medit('Выбрана награда: +1 хп. Максимальное хп бойца '+games[call.message.chat.id]['bots'][prize]['name']+' увеличено на 1!',call.message.chat.id,call.message.message_id)
+         begingame(call.message.chat.id)
                
    
    
